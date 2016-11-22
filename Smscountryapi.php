@@ -13,7 +13,7 @@ class Smscountryapi
 	$this->headers = array(  
 		"Content-Type: application/json",
 		"Authorization: Basic ". base64_encode($this->authKey . ":" . $this->authToken)
-		);			
+		);		
 	}
     public function getSmsDetails($messageUUID="d8f39d9a-8a36-4974-8b92-7ae0b83a1aa2")
     {
@@ -375,7 +375,6 @@ class Smscountryapi
 				\"AnswerUrl\": \"{$AnswerUrl}\",
 				\"Participants\":{$Participants}
 		}");
-		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER,FALSE);  
 		curl_setopt($rest,CURLOPT_RETURNTRANSFER,TRUE); 
 		$response = curl_exec($rest);  
 		return $response;
@@ -591,7 +590,6 @@ class Smscountryapi
 		curl_setopt($rest,CURLOPT_HTTPHEADER,$this->headers);
 		curl_setopt($rest, CURLOPT_HEADER, FALSE);
 		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER,FALSE);  
-		curl_setopt($rest,CURLOPT_RETURNTRANSFER,TRUE);  
 		curl_setopt($rest,CURLOPT_CUSTOMREQUEST,"DELETE");
 		$response = curl_exec($rest);  
 		return $response;
@@ -604,7 +602,6 @@ class Smscountryapi
 		curl_setopt($rest,CURLOPT_URL,$this->url."/".$this->authKey."/GroupCalls/{$GroupCallUUID}/Recordings/");
 		curl_setopt($rest,CURLOPT_HTTPHEADER,$this->headers);
 		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER,FALSE);  
-		curl_setopt($rest,CURLOPT_RETURNTRANSFER,TRUE); 
 		curl_setopt($rest, CURLOPT_HEADER, FALSE); 
 		curl_setopt($rest, CURLOPT_CUSTOMREQUEST, "DELETE");	
 		$response = curl_exec($rest);  
