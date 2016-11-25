@@ -39,18 +39,21 @@ class Smscountryapi
 		return $response;
 
     }
-	public function sendSms($Text="hello",$Number="7206644479",$SenderId="",$DRNotifyUrl="",$RNotifyHttpMethod="POST")
+	public function sendSms($Text="",$Number="",$SenderId="",$DRNotifyUrl="",$RNotifyHttpMethod="POST")
     {
-       $rest = curl_init();  
+        $rest = curl_init();  
 		curl_setopt($rest,CURLOPT_URL,$this->url."/".$this->authKey."/SMSes/");
+		curl_setopt($rest, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($rest,CURLOPT_HTTPHEADER,$this->headers); 
+		curl_setopt($rest, CURLOPT_HEADER, FALSE);
 		curl_setopt($rest, CURLOPT_POST, TRUE);
 		curl_setopt($rest, CURLOPT_POSTFIELDS, "{
-				\"Text\": \"$Text\",
-				\"Number\": \"$Number\",
-				\"SenderId\": \"$SenderId\",
-				\"DRNotifyUrl\": \"$DRNotifyUrl\",
-				\"DRNotifyHttpMethod\": \"$RNotifyHttpMethod\"
+				\"Text\": \"{$Text}\",
+				\"Number\": \"{$Number}\",
+				\"SenderId\": \"SMSCountry\",
+				\"DRNotifyUrl\": \"{$DRNotifyUrl}\",
+				\"DRNotifyHttpMethod\": \"{$RNotifyHttpMethod}\",
+				\"Tool\": \"API\"
 			}");
 		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER, false);  
 		curl_setopt($rest,CURLOPT_RETURNTRANSFER, true);  
@@ -58,25 +61,33 @@ class Smscountryapi
 		return $response;
 
     }
-	public function sendBulkSms($Text="123456789",$Numbers=array(),$SenderId="",$DRNotifyUrl="",$DRNotifyHttpMethod="POST")
+	public function sendBulkSms($Text="",$Numbersdata="",$SenderId="SMSCountry",$DRNotifyUrl="",$DRNotifyHttpMethod="POST")
     {
-			print_r($this->numberArraycon($Numbers));
-       $rest = curl_init();  
+		
+		$numbers=array();		
+		foreach(explode(',',$Numbersdata) as $val):
+		$numbers[]=stripslashes(trim('"'.$val.'"'));
+		endforeach;
+		$numbers='['.trim(implode(',',$numbers)).']';
+		$numbers=(string)$numbers; 
+			
+		$rest = curl_init();  
 		curl_setopt($rest,CURLOPT_URL,$this->url."/".$this->authKey."/BulkSMSes/");
 		curl_setopt($rest,CURLOPT_HTTPHEADER,$this->headers); 
-		curl_setopt($rest, CURLOPT_POST, TRUE);
+		curl_setopt($rest, CURLOPT_HEADER,FALSE);
+		curl_setopt($rest, CURLOPT_POST,TRUE);
 		curl_setopt($rest, CURLOPT_POSTFIELDS, "{
-				\"Text\": \"$Text\",
-				\"Numbers\": [$this->numberArraycon($Numbers)],
-				\"SenderId\": \"$SenderId\",
-				\"DRNotifyUrl\": \"$DRNotifyUrl\",
-				\"DRNotifyHttpMethod\": \"$DRNotifyHttpMethod\"
+				\"Text\": \"{$Text}\",
+				\"Numbers\":{$numbers},
+				\"SenderId\": \"{$SenderId}\",
+				\"DRNotifyUrl\": \"{$DRNotifyUrl}\",
+				\"DRNotifyHttpMethod\": \"{$DRNotifyHttpMethod}\"
 			}");
-		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER, false);  
-		curl_setopt($rest,CURLOPT_RETURNTRANSFER, true);  
-		$response = curl_exec($rest);  
+		curl_setopt($rest,CURLOPT_SSL_VERIFYPEER,FALSE);  
+		curl_setopt($rest,CURLOPT_RETURNTRANSFER,TRUE);  
+		$response = curl_exec($rest);
+		curl_close($rest);  
 		return $response;
-
     }
     
 	public function numberArraycon($Numbers=array())
@@ -377,7 +388,7 @@ class Smscountryapi
 		}");
 		curl_setopt($rest,CURLOPT_RETURNTRANSFER,TRUE); 
 		$response = curl_exec($rest);  
-		return $response;
+		return $response; 
     }
     
     public function GetGroupCallList($FromDate="",$ToDate="",$Offset="",$Limit="10")
