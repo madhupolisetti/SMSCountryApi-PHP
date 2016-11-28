@@ -50,7 +50,6 @@ class Smscountryapi
 		curl_setopt($rest, CURLOPT_POSTFIELDS, "{
 				\"Text\": \"{$Text}\",
 				\"Number\": \"{$Number}\",
-				\"SenderId\": \"SMSCountry\",
 				\"DRNotifyUrl\": \"{$DRNotifyUrl}\",
 				\"DRNotifyHttpMethod\": \"{$RNotifyHttpMethod}\",
 				\"Tool\": \"API\"
